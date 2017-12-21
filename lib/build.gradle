@@ -1,0 +1,21 @@
+/*
+ *  Copyright (c) 2017 Post Social Inc
+ *     All Rights Reserved.
+ *     Post Social Inc Confidential and Proprietary.
+ */
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:$lintVersion"
+    compileOnly "com.android.tools.lint:lint-checks:$lintVersion"
+
+    implementation 'com.google.guava:guava:23.0'
+}
+
+jar {
+    manifest {
+        attributes("Lint-Registry-v2": "xyz.other.android.lint.CustomIssueRegistry")
+    }
+    archiveName = 'lint.jar'
+}
