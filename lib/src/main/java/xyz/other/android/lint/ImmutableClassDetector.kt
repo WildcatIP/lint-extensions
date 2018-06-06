@@ -31,7 +31,7 @@ internal val IMMUTABLE_CLASS = Issue.create(
         Category.CORRECTNESS,
         8,
         Severity.ERROR,
-        IMPLEMENTATION)!!
+        IMPLEMENTATION)
 
 class ImmutableClassDetector : Detector(), Detector.UastScanner {
 
@@ -45,12 +45,12 @@ class ImmutableClassDetector : Detector(), Detector.UastScanner {
 }
 
 private class ImmutableClassChecker(private val context: JavaContext) : UElementHandler() {
-    override fun visitClass(klass: UClass) {
-        if (!markedImmutable(klass.annotations)) {
+    override fun visitClass(node: UClass) {
+        if (!markedImmutable(node.annotations)) {
             return
         }
 
-        val declarations = klass.uastDeclarations
+        val declarations = node.uastDeclarations
         if (declarations.isEmpty()) {
             return
         }

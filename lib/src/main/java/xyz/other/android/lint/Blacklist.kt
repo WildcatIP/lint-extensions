@@ -25,23 +25,23 @@ import java.util.HashSet
 import java.util.regex.Pattern
 
 
-const private val PROP_BLACKLIST_FILE = "lint.blacklist"
-const private val DEFAULT_BLACKLIST_FILE = "tools/lint/blacklist.xml"
+private const val PROP_BLACKLIST_FILE = "lint.blacklist"
+private const val DEFAULT_BLACKLIST_FILE = "tools/lint/blacklist.xml"
 
-const private val TAG_ROOT = "blacklist"
-const private val TAG_METHOD = "method"
-const private val TAG_CONSTRUCTOR = "constructor"
-const private val TAG_ANNOTATION = "annotation"
-const private val TAG_BASE_CLASS = "base-class"
-const private val TAG_JAVADOC = "javadoc"
-const private val TAG_COMMENT = "#comment"
-const private val TAG_TEXT = "#text"
-const private val ATTR_CLASS = "class"
-const private val ATTR_NAME = "name"
-const private val ATTR_PARAMS = "params"
-const private val ATTR_MESSAGE = "message"
+private const val TAG_ROOT = "blacklist"
+private const val TAG_METHOD = "method"
+private const val TAG_CONSTRUCTOR = "constructor"
+private const val TAG_ANNOTATION = "annotation"
+private const val TAG_BASE_CLASS = "base-class"
+private const val TAG_JAVADOC = "javadoc"
+private const val TAG_COMMENT = "#comment"
+private const val TAG_TEXT = "#text"
+private const val ATTR_CLASS = "class"
+private const val ATTR_NAME = "name"
+private const val ATTR_PARAMS = "params"
+private const val ATTR_MESSAGE = "message"
 
-class JavadocTag(private val name: String, val message: String) {
+class JavadocTag(private val name: String, private val message: String) {
     override fun toString(): String {
         return "JavadocTag(message='$message')"
     }
@@ -337,7 +337,7 @@ class Blacklist(context: JavaContext) {
             var blacklistedMethods: MutableSet<Method>? = methods[methodName]
             if (blacklistedMethods == null) {
                 blacklistedMethods = mutableSetOf()
-                methods.put(methodName, blacklistedMethods)
+                methods[methodName] = blacklistedMethods
             }
             blacklistedMethods.add(Method(methodName, className, formalParams, message))
         }
@@ -350,7 +350,7 @@ class Blacklist(context: JavaContext) {
 
             val message = element.getAttribute(ATTR_MESSAGE)
 
-            annotationMap.put(className, Annotation(className, message))
+            annotationMap[className] = Annotation(className, message)
         }
 
         private fun parseBaseClass(element: Element, baseClassMap: MutableMap<String, BaseClass>) {
@@ -361,7 +361,7 @@ class Blacklist(context: JavaContext) {
 
             val message = element.getAttribute(ATTR_MESSAGE)
 
-            baseClassMap.put(className, BaseClass(className, message))
+            baseClassMap[className] = BaseClass(className, message)
         }
 
         private fun parseJavadocTag(element: Element, javadocTags: MutableMap<String, JavadocTag>) {
@@ -374,7 +374,7 @@ class Blacklist(context: JavaContext) {
 
             val message = element.getAttribute(ATTR_MESSAGE)
 
-            javadocTags.put(tagName, JavadocTag(tagName, message))
+            javadocTags[tagName] = JavadocTag(tagName, message)
         }
 
         private fun abort(message: String, vararg args: Any): Nothing {

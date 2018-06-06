@@ -16,22 +16,19 @@
 package xyz.other.android.lint
 
 import com.android.tools.lint.client.api.IssueRegistry
-import com.android.tools.lint.detector.api.Issue
 
 /*
  * Re-implementation of an idea I encountered at Twitter.
  */
 @SuppressWarnings("unused")
 class CustomIssueRegistry : IssueRegistry() {
-    override fun getIssues(): List<Issue> {
-        return listOf(
-                MISSING_NULLITY_ANNOTATION,
-                UNNECESSARY_NULLITY_ANNOTATION,
-                IMMUTABLE_CLASS,
-                BLACKLISTED_CONSTRUCTOR,
-                BLACKLISTED_METHOD,
-                BLACKLISTED_BASE_CLASS,
-                BLACKLISTED_ANNOTATION
-        )
-    }
+    override val issues = listOf(
+            MISSING_NULLITY_ANNOTATION,
+            UNNECESSARY_NULLITY_ANNOTATION,
+            IMMUTABLE_CLASS,
+            BLACKLISTED_CONSTRUCTOR,
+            BLACKLISTED_METHOD,
+            BLACKLISTED_BASE_CLASS,
+            BLACKLISTED_ANNOTATION
+    )
 }

@@ -54,11 +54,11 @@ class BlacklistedMethodDetector : Detector(), Detector.UastScanner {
 private class BlacklistedMethodChecker(private val context: JavaContext, private val blacklist: Blacklist)
     : UElementHandler() {
 
-    override fun visitCallExpression(call: UCallExpression?) {
-        val method = call?.resolve() ?: return
+    override fun visitCallExpression(node: UCallExpression) {
+        val method = node.resolve() ?: return
 
         // Allow blacklisted methods in their own class and subclasses
-        val callingClass = call.getContainingClass() ?: return
+        val callingClass = node.getContainingClass() ?: return
         val definingClass = method.containingClass?.qualifiedName ?: return
         if (context.evaluator.extendsClass(callingClass, definingClass, false)) {
             return
@@ -68,8 +68,8 @@ private class BlacklistedMethodChecker(private val context: JavaContext, private
 
         context.report(
                 if (method.isConstructor) BLACKLISTED_CONSTRUCTOR else BLACKLISTED_METHOD,
-                call,
-                context.getLocation(call),
+                node,
+                context.getLocation(node),
                 forbiddenMethod.message ?: "Use of ${method.name} is not allowed.")
     }
 }

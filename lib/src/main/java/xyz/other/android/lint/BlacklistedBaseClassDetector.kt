@@ -44,24 +44,21 @@ class BlacklistedClassDetector : Detector(), Detector.UastScanner {
 private class BlacklistedClassChecker(private val context: JavaContext, private val blacklist: Blacklist)
     : UElementHandler() {
 
-    override fun visitClass(klass: UClass?) {
-        val superTypes = klass?.uastSuperTypes
-        if ((superTypes == null) || superTypes.isEmpty()) {
-            return
-        }
+    override fun visitClass(node: UClass) {
+        val superTypes = node.uastSuperTypes
+        if (superTypes.isEmpty()) { return }
 
-        val blacklisted = blacklist.getBlacklistedBaseClasses(HashSet(superTypes.map { it.getQualifiedName()!! }))
+        val blacklisted = blacklist.getBlacklistedBaseClasses(
+                HashSet(superTypes.map { it.getQualifiedName() ?: "" }.filter { !it.isEmpty() }))
 
-        if (blacklisted.isEmpty()) {
-            return
-        }
+        if (blacklisted.isEmpty()) { return }
 
         val messages = blacklisted.map { it.message }
 
         context.report(
                 BLACKLISTED_BASE_CLASS,
-                klass,
-                context.getLocation(klass as UElement),
+                node,
+                context.getLocation(node as UElement),
                 messages.joinToString("; "))
     }
 }

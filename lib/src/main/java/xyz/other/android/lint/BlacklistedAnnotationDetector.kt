@@ -46,27 +46,17 @@ class BlacklistedAnnotationDetector : Detector(), Detector.UastScanner {
 
 private class BlacklistedAnnotationChecker(private val context: JavaContext, private val blacklist: Blacklist)
     : UElementHandler() {
-    override fun visitClass(klass: UClass?) {
-        if (klass == null) {
-            return
-        }
-        checkAnnotations(klass)
+    override fun visitClass(node: UClass) {
+        checkAnnotations(node)
     }
 
-    override fun visitField(field: UField?) {
-        if (field == null) {
-            return
-        }
-        checkAnnotations(field)
+    override fun visitField(node: UField) {
+        checkAnnotations(node)
     }
 
-    override fun visitMethod(method: UMethod?) {
-        if (method == null) {
-            return
-        }
-        checkAnnotations(method)
-
-        method.uastParameters.forEach { param -> checkAnnotations(param) }
+    override fun visitMethod(node: UMethod) {
+        checkAnnotations(node)
+        node.uastParameters.forEach { param -> checkAnnotations(param) }
     }
 
     private fun checkAnnotations(node: UAnnotated) {

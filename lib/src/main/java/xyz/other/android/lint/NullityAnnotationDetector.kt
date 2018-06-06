@@ -91,23 +91,16 @@ class NullityAnnotationDetector : Detector(), Detector.UastScanner {
 
 private class NullityAnnotationChecker(private val context: JavaContext) : UElementHandler() {
 
-    override fun visitField(field: UField?) {
-        if (field == null) {
-            return
-        }
-
-        checkNullityAnnotations(field, field.type, field.isFinal, field.annotations)
+    override fun visitField(node: UField) {
+        checkNullityAnnotations(node, node.type, node.isFinal, node.annotations)
     }
 
-    override fun visitMethod(method: UMethod?) {
-        if (method == null) {
-            return
-        }
+    override fun visitMethod(node: UMethod) {
 
-        checkNullityAnnotations(method, method.returnType, method.isFinal, method.annotations)
+        checkNullityAnnotations(node, node.returnType, node.isFinal, node.annotations)
 
-        val finalRequired = method.containingClass?.isInterface == false
-        method.uastParameters.forEach { param -> checkParameter(param, finalRequired) }
+        val finalRequired = node.containingClass?.isInterface == false
+        node.uastParameters.forEach { param -> checkParameter(param, finalRequired) }
     }
 
     private fun checkParameter(param: UParameter, finalRequired: Boolean) {
